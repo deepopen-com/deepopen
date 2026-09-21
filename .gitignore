@@ -1,0 +1,47 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.DS_Store
+.env
+.pypirc
+
+
+# session transcripts (may contain pasted credentials)
+session-*.md
+*-session.md
+.claude-session*
+
+# credentials - never commit
+.env
+.env.*
+*.pypirc
+.pypirc
+*.token
+.hf_token
+hf_token*
+secrets.json
+credentials.json
+
+# terminal transcripts dumped by the CLI (they quote whatever was pasted, including tokens)
+[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-*-local-command-*.txt
+*-local-command-*.txt

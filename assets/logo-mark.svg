@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"
+     width="64" height="64" role="img" aria-label="Laya">
+  <title>Laya</title>
+  <desc>An open stroke whose end breaks into points that spiral inward and shrink to a single
+  point: becoming, then dissolving into one.</desc>
+  <g fill="none" stroke="none">
+    <path d="M 22.141 13.458 A 21.0 21.0 0 1 0 42.500 50.187" stroke="#2a78d6" stroke-width="5.0" stroke-linecap="round" opacity="0.95"/>
+    <circle cx="48.213" cy="42.609" r="2.782" fill="#2a78d6" opacity="0.929"/>
+    <circle cx="49.456" cy="33.958" r="2.527" fill="#2a78d6" opacity="0.894"/>
+    <circle cx="46.696" cy="26.535" r="2.291" fill="#2a78d6" opacity="0.852"/>
+    <circle cx="41.336" cy="21.918" r="2.067" fill="#2a78d6" opacity="0.803"/>
+    <circle cx="35.242" cy="20.694" r="1.852" fill="#2a78d6" opacity="0.749"/>
+    <circle cx="30.173" cy="22.422" r="1.642" fill="#2a78d6" opacity="0.691"/>
+    <circle cx="27.294" cy="25.889" r="1.438" fill="#2a78d6" opacity="0.628"/>
+    <circle cx="26.902" cy="29.558" r="1.239" fill="#2a78d6" opacity="0.562"/>
+    <circle cx="28.430" cy="32.075" r="1.043" fill="#2a78d6" opacity="0.493"/>
+    <circle cx="30.702" cy="32.690" r="0.850" fill="#2a78d6" opacity="0.420"/>
+    <circle cx="32.00" cy="32.00" r="2.35" fill="#2a78d6"/>
+  </g>
+</svg>

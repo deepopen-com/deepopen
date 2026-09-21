@@ -1,0 +1,100 @@
+name: Security
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 6 * * 1"     # Monday morning: catch CVEs disclosed since the last push
+
+# Read-only by default. Jobs that need more ask for it explicitly.
+permissions: read-all
+
+jobs:
+  secrets:
+    name: secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # gitleaks needs history to scan every commit in the PR
+      - name: gitleaks (diff)
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      # The action above only scans the commits in this push or PR. That misses a secret that
+      # entered on an earlier commit and is still sitting in the tree -- exactly how a CLI
+      # transcript quoting a PyPI token once survived in main. This second pass
+      # scans the checked-out files themselves, so anything present in HEAD is caught no matter
+      # which commit put it there.
+      - name: gitleaks (working tree)
+        run: |
+          VER=8.30.1
+          curl -sSL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${VER}/gitleaks_${VER}_linux_x64.tar.gz"
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks dir . --no-banner --redact --exit-code 1
+
+  deps:
+    name: dependency CVEs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pip-audit
+      - name: Audit declared dependencies
+        run: |
+          # Audit what the package DECLARES, not a local install. Installing torch from the
+          # PyTorch CPU index yields a local version (2.14.0+cpu) that does not exist on PyPI,
+          # so pip-audit cannot resolve it and --strict fails the job on that alone.
+          python - <<'PY' > requirements-audit.txt
+          import re
+          src = open("pyproject.toml").read()
+          block = re.search(r"dependencies = \[(.*?)\]", src, re.S).group(1)
+          for dep in re.findall(r'"([^"]+)"', block):
+              print(dep)
+          PY
+          cat requirements-audit.txt
+          pip-audit --strict --desc -r requirements-audit.txt
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: python
+          queries: security-extended
+      - uses: github/codeql-action/analyze@v3
+
+  supply_chain:
+    name: no unsafe deserialization
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Weights must load through safetensors, never pickle
+        run: |
+          # torch.load / pickle execute arbitrary code during deserialization. Laya loads
+          # checkpoints from the Hub, so a pickle path would be remote code execution on
+          # `laya.load("someone/their-model")`.
+          if grep -rnE "\bpickle\b|torch\.load\(|joblib\.load\(|yaml\.load\(" laya/; then
+            echo "::error::unsafe deserialization in the shipped package - use safetensors"
+            exit 1
+          fi
+          echo "OK: no pickle/torch.load/yaml.load in laya/"
+      - name: No shell-out or dynamic exec in the shipped package
+        run: |
+          if grep -rnE "os\.system\(|subprocess\.|shell=True|\beval\(|\bexec\(" laya/ \
+               | grep -v "\.eval()"; then
+            echo "::error::shell-out or dynamic execution in the shipped package"
+            exit 1
+          fi
+          echo "OK: no os.system/subprocess/eval/exec in laya/"
