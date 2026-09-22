@@ -9,6 +9,8 @@ DeepOpen 在两个榜单打榜的初步结果：
 模型： Deepopen（改进后的 Laya）
 榜单： CLINC150 和 Banking77
 
+![](https://github.com/deepopen-com/deepopen/blob/main/%E6%89%93%E6%A6%9C.png?raw=true)
+
 本地测试： 对照参考成绩，分别位于第 2 位和第 5 位；
 
 
