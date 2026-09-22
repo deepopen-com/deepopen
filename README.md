@@ -5,7 +5,14 @@ DeepOpen 是基于laya的一款完全开源的非自回归System 1决策引擎�
 
 # 打榜表现
 
-![Uploading f08de7b49fb5db84d224ed16fc735f0a.png…]()
+DeepOpen 在两个榜单打榜的初步结果：
+模型： Deepopen（改进后的 Laya）
+榜单： CLINC150 和 Banking77
+
+本地测试： 对照参考成绩，分别位于第 2 位和第 5 位；
+
+
+
 
 
 ## 核心架构与三大检查点
