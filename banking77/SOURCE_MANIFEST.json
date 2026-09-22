@@ -1,0 +1,43 @@
+{
+  "source": "Existing Banking77 experiment work scripts",
+  "documentation_date": "2026-09-22",
+  "upstream_commit": "42626c348753fbb17572a813127df2278a1ec527",
+  "files": [
+    {
+      "file": "banking77.py",
+      "original_sha256": "e9640c40bbce98a55b90196db1d95dd3eeb890f3d73260181464591523f833f8",
+      "packaged_sha256": "bd51c3dc37c796a0d30299fc92b79c68cbc252825f8bebdb7e99d9191f5edc12",
+      "change": "ROOT defaults to script directory, with LAYA_BANKING77_ROOT override; training logic unchanged."
+    },
+    {
+      "file": "classifier.py",
+      "original_sha256": "d42171642b579a2777950ba3805505faf14e2df3415fb99013bd43b92018aca2",
+      "packaged_sha256": "d42171642b579a2777950ba3805505faf14e2df3415fb99013bd43b92018aca2",
+      "change": "Unchanged."
+    },
+    {
+      "file": "prototype_train.py",
+      "original_sha256": "07f8d4dca8a7d855b178c577f285dff301ce4f2f24c045d3b898e6be8583299d",
+      "packaged_sha256": "07f8d4dca8a7d855b178c577f285dff301ce4f2f24c045d3b898e6be8583299d",
+      "change": "Unchanged."
+    },
+    {
+      "file": "prototype_model.py",
+      "original_sha256": "ab4302b9436faf9eb9f2b8d6fa6197b5c9f447dfc35c04c9600c0f3503430deb",
+      "packaged_sha256": "ab4302b9436faf9eb9f2b8d6fa6197b5c9f447dfc35c04c9600c0f3503430deb",
+      "change": "Unchanged."
+    },
+    {
+      "file": "deepopen_evaluate.py",
+      "original_sha256": "89de3acd225b9bd8bf3561d1d116956b4b80eca373c07e9c0de79702283f1d56",
+      "packaged_sha256": "89de3acd225b9bd8bf3561d1d116956b4b80eca373c07e9c0de79702283f1d56",
+      "change": "Unchanged."
+    },
+    {
+      "file": "evaluate_checkpoint.py",
+      "original_sha256": "5817e6419f717c69b7a7ceba5871a73aa79d8fe9c9495c99082a99e8a30b59f6",
+      "packaged_sha256": "5817e6419f717c69b7a7ceba5871a73aa79d8fe9c9495c99082a99e8a30b59f6",
+      "change": "Unchanged."
+    }
+  ]
+}

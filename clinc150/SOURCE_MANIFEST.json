@@ -1,0 +1,77 @@
+{
+  "scope": "CLINC150 standalone source package: R-Drop reproduction and optional heterogeneous ensemble",
+  "weights_included": false,
+  "training_code_changes": "None; source copied verbatim from local experiment. README and report figure paths adapted.",
+  "files": [
+    {
+      "file": "hybrid.py",
+      "sha256": "ac0958f1e27f8d6efebdd3dbe593204352b8080123b6a64934438b9cfac0c877",
+      "original_sha256": "ac0958f1e27f8d6efebdd3dbe593204352b8080123b6a64934438b9cfac0c877"
+    },
+    {
+      "file": "hybrid_finish.py",
+      "sha256": "bf3e7cd34b0b80b4c08fd6bd20a0037848ed937d4bedbccaf48d52d750d2dc83",
+      "original_sha256": "bf3e7cd34b0b80b4c08fd6bd20a0037848ed937d4bedbccaf48d52d750d2dc83"
+    },
+    {
+      "file": "hybrid_replicates.py",
+      "sha256": "0014fa7cada2cdde346c86af1defed99ae198e34e772b53d4516277915199f44",
+      "original_sha256": "0014fa7cada2cdde346c86af1defed99ae198e34e772b53d4516277915199f44"
+    },
+    {
+      "file": "infer_clinc.py",
+      "sha256": "9659775bcf55cc0f04e16d9256c321525b6afb5b109b698e911c817ab6e8251a",
+      "original_sha256": "9659775bcf55cc0f04e16d9256c321525b6afb5b109b698e911c817ab6e8251a"
+    },
+    {
+      "file": "infer_hybrid.py",
+      "sha256": "8b71afdaa06994eb5e695611d5a9455e3898e1747e45cddb2011c8f7f4e79085",
+      "original_sha256": "8b71afdaa06994eb5e695611d5a9455e3898e1747e45cddb2011c8f7f4e79085"
+    },
+    {
+      "file": "prepare.py",
+      "sha256": "6fa40c7c9202b1d66d6fafc71edcf6141e2b00598c1855944200eb5bd52f3964",
+      "original_sha256": "6fa40c7c9202b1d66d6fafc71edcf6141e2b00598c1855944200eb5bd52f3964"
+    },
+    {
+      "file": "prepare_hybrid.py",
+      "sha256": "b3390f9ebb73bca6c528026207ef88c019c2dbd2dbf98b5ecb8cb91be4de74a7",
+      "original_sha256": "b3390f9ebb73bca6c528026207ef88c019c2dbd2dbf98b5ecb8cb91be4de74a7"
+    },
+    {
+      "file": "round2.py",
+      "sha256": "eca806176ad0a79cc053b5d28758462bc7380592ceeea107567afe7fbc796ae1",
+      "original_sha256": "eca806176ad0a79cc053b5d28758462bc7380592ceeea107567afe7fbc796ae1"
+    },
+    {
+      "file": "round2_finish.py",
+      "sha256": "ca8a19542c1ecf2e6939dd20f54e36d34d5a6154d5f15a8b1ca87520928f5f0c",
+      "original_sha256": "ca8a19542c1ecf2e6939dd20f54e36d34d5a6154d5f15a8b1ca87520928f5f0c"
+    },
+    {
+      "file": "round3.py",
+      "sha256": "1d97dbd802c8c4b11da889382f26d2b60600a1f9d20bb48786bdd9bedcca0c4a",
+      "original_sha256": "1d97dbd802c8c4b11da889382f26d2b60600a1f9d20bb48786bdd9bedcca0c4a"
+    },
+    {
+      "file": "train_clinc.py",
+      "sha256": "a3adc6021b5a00f8cc9f7521c924b498c1ea26b253d82c04d623e7e0e671545d",
+      "original_sha256": "a3adc6021b5a00f8cc9f7521c924b498c1ea26b253d82c04d623e7e0e671545d"
+    },
+    {
+      "file": "verify_experiment.py",
+      "sha256": "10cbd236ab02f7d0a51968222a683f469310a995966e6d7cd1c4bcd4cb591674",
+      "original_sha256": "10cbd236ab02f7d0a51968222a683f469310a995966e6d7cd1c4bcd4cb591674"
+    },
+    {
+      "file": "verify_hybrid_export.py",
+      "sha256": "0f3bbce5035ce967b6d1d08e96f8d764d63cc2ad48693816007569091fd97fc1",
+      "original_sha256": "0f3bbce5035ce967b6d1d08e96f8d764d63cc2ad48693816007569091fd97fc1"
+    },
+    {
+      "file": "verify_round2.py",
+      "sha256": "6c836483c342e41e53226390e710896fceb8ae9e951262ab9ba6ed8e76bd083b",
+      "original_sha256": "6c836483c342e41e53226390e710896fceb8ae9e951262ab9ba6ed8e76bd083b"
+    }
+  ]
+}

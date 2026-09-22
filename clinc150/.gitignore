@@ -1,0 +1,20 @@
+# Environments and caches
+.venv/
+venv*/
+__pycache__/
+*.py[cod]
+.cache/
+# Downloaded inputs and generated experiment artifacts
+upstream/
+data/
+artifacts/
+logs/
+requirements-local.txt
+# Large model files and local credentials
+*.safetensors
+*.pt
+*.pth
+*.bin
+.env
+.env.*
+*.pem
