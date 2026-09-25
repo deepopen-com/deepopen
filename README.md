@@ -1,5 +1,5 @@
 
-# DeepOpen:    [中文](https://github.com/deepopen-com/deepopen/readme-cn)
+# DeepOpen:    [中文](https://github.com/deepopen-com/deepopen/blob/main/readme-cn)
 
 Open-Source Multilingual System 1 Decision Engine Technical Whitepaper
 
