@@ -1,10 +1,12 @@
 
-DeepOpen: Open-Source Multilingual System 1 Decision Engine Technical Whitepaper
+# DeepOpen:    [中文](https://github.com/deepopen-com/deepopen/readme-cn)
 
-Introduction
+Open-Source Multilingual System 1 Decision Engine Technical Whitepaper
+
+## Introduction
 DeepOpen is a fully open-source non-autoregressive System 1 decision engine built on Laya, purpose-built for structured decision-making scenarios. It breaks away from the conventional token-by-token text generation paradigm of large language models, completing multi-dimensional classification across over 100 languages in a single forward pass. Tested on NVIDIA T4 GPUs, it achieves latency as low as 33ms per single request and only 7.2ms for batch processing. Trained with the strictly correct reward rule RLCD reinforcement learning framework, and equipped with a built-in intelligent router that automatically matches the optimal checkpoint for every incoming request, DeepOpen thoroughly solves the longstanding pain points of traditional LLMs in classification, routing, and scoring scenarios: slow inference speed, high deployment cost, and vulnerability to hallucinations.
 
-Benchmark Reproduction & Leaderboard Results
+## Benchmark Reproduction & Leaderboard Results
 We provide fully reproducible training and evaluation pipelines for two widely recognized intent classification benchmarks, allowing users to replicate our state-of-the-art results with one click:
 - Banking77: Full reproduction scripts, dataset configurations and pre-trained checkpoints are available at  
   https://github.com/deepopen-com/deepopen/tree/main/banking77
@@ -18,11 +20,11 @@ Core Advantages
 - Optimized GPU Efficiency: Far higher throughput than equivalent autoregressive LLMs on the same hardware, drastically reducing inference cost at scale.
 
 Quick Start
-```bash
-git clone https://github.com/deepopen-com/deepopen.git
-cd deepopen
-pip install -r requirements.txt
-```
+
+  https://github.com/deepopen-com/deepopen/tree/main/banking77
+  https://github.com/deepopen-com/deepopen/tree/main/clinc150
+  
+ 
 You can then directly run the provided benchmark scripts under the `banking77` and `clinc150` directories to verify performance, or deploy the engine as a local decision service for your own structured scenarios.
 
 License & Contribution
