@@ -1,3 +1,36 @@
+
+DeepOpen: Open-Source Multilingual System 1 Decision Engine Technical Whitepaper
+
+Introduction
+DeepOpen is a fully open-source non-autoregressive System 1 decision engine built on Laya, purpose-built for structured decision-making scenarios. It breaks away from the conventional token-by-token text generation paradigm of large language models, completing multi-dimensional classification across over 100 languages in a single forward pass. Tested on NVIDIA T4 GPUs, it achieves latency as low as 33ms per single request and only 7.2ms for batch processing. Trained with the strictly correct reward rule RLCD reinforcement learning framework, and equipped with a built-in intelligent router that automatically matches the optimal checkpoint for every incoming request, DeepOpen thoroughly solves the longstanding pain points of traditional LLMs in classification, routing, and scoring scenarios: slow inference speed, high deployment cost, and vulnerability to hallucinations.
+
+Benchmark Reproduction & Leaderboard Results
+We provide fully reproducible training and evaluation pipelines for two widely recognized intent classification benchmarks, allowing users to replicate our state-of-the-art results with one click:
+- Banking77: Full reproduction scripts, dataset configurations and pre-trained checkpoints are available at  
+  https://github.com/deepopen-com/deepopen/tree/main/banking77
+- CLINC150: Complete end-to-end benchmark implementation for intent classification tasks can be accessed at  
+  https://github.com/deepopen-com/deepopen/tree/main/clinc150
+
+Core Advantages
+- Ultra-Low Latency: Non-autoregressive architecture eliminates iterative token generation, delivering millisecond-level inference for real-time decision services.
+- Native Multilingual Support: Out-of-the-box classification capability for 100+ languages without additional fine-tuning for most common scenarios.
+- Hallucination-Free Decision Making: The deterministic classification design ensures no arbitrary generated content, making outputs fully reliable for production routing and scoring use cases.
+- Optimized GPU Efficiency: Far higher throughput than equivalent autoregressive LLMs on the same hardware, drastically reducing inference cost at scale.
+
+Quick Start
+```bash
+git clone https://github.com/deepopen-com/deepopen.git
+cd deepopen
+pip install -r requirements.txt
+```
+You can then directly run the provided benchmark scripts under the `banking77` and `clinc150` directories to verify performance, or deploy the engine as a local decision service for your own structured scenarios.
+
+License & Contribution
+DeepOpen is released under a permissive open-source license, welcoming developers, researchers and enterprise users to contribute improvements, extend supported languages, and adapt the engine for more domain-specific decision workflows.
+
+ 
+
+
 # DeepOpen：开源多语言System 1决策引擎 技术白皮书
 
 DeepOpen 是基于laya的一款完全开源的非自回归System 1决策引擎，专为结构化类型决策场景设计。
