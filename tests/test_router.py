@@ -4,8 +4,8 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from laya.lang import analyse, detect_script, guess_latin_language, is_english, state_text  # noqa: E402
-from laya.router import (  # noqa: E402
+from deepopen.lang import analyse, detect_script, guess_latin_language, is_english, state_text  # noqa: E402
+from deepopen.router import (  # noqa: E402
     BUNDLE_REPO,
     DEFAULT_MODELS,
     STANDALONE_MODELS,
@@ -61,6 +61,10 @@ for label, text, want in [
                     "facture qui a été payée le mois dernier avec la carte de crédit", False),
     ("german long", "Der Kunde wurde zweimal belastet und möchte eine Rückerstattung für die "
                     "Rechnung die nicht korrekt ist und auch nicht bezahlt wurde", False),
+    ("romanian", "Clientul a fost facturat de două ori și solicită o rambursare pentru factura "
+                 "care a fost plătită luna trecută cu cardul de credit", False),
+    ("polish", "Klient został obciążony dwa razy i chce zwrotu pieniędzy za fakturę", False),
+    ("latvian", "Klients tika norēķināts divreiz un pieprasa atmaksu par rēķinu", False),
 ]:
     check("is_english/" + label, is_english(text), want)
 
@@ -71,6 +75,8 @@ for label, text, want in [
     ("french", "Le client a ete facture deux fois et il demande un remboursement pour la facture", "fr"),
     ("german", "Der Kunde wurde zweimal belastet und moechte eine Rueckerstattung fuer die Rechnung", "de"),
     ("spanish", "El cliente fue cobrado dos veces y quiere que le devuelvan el dinero por la factura", "es"),
+    ("romanian", "Clientul a fost facturat de două ori și solicită o rambursare pentru factura "
+                 "care a fost plătită luna trecută", "ro"),
     ("too short", "refund", None),
 ]:
     check("latin_lang/" + label, guess_latin_language(text), want)
@@ -136,6 +142,10 @@ cases = [
     ("arabic text", {"body": "تم خصم المبلغ مرتين"}, Q_GENERIC, {}, "multilingual"),
     ("german text", {"body": "Der Kunde wurde zweimal belastet und moechte eine Rueckerstattung "
                              "fuer die Rechnung die nicht korrekt ist"}, Q_GENERIC, {}, "multilingual"),
+    ("romanian text", {"body": "Clientul a fost facturat de două ori și solicită o rambursare "
+                                "pentru factura care a fost plătită luna trecută"}, Q_GENERIC, {}, "multilingual"),
+    ("polish text", {"body": "Klient został obciążony dwa razy i chce zwrotu pieniędzy za fakturę"},
+                     Q_GENERIC, {}, "multilingual"),
     ("explicit model", {"body": "anything"}, Q_GENERIC, {"model": "multilingual"}, "multilingual"),
     ("explicit model overrides script", {"body": "मुझसे दो बार"}, Q_GENERIC,
      {"model": "english"}, "english"),
@@ -163,6 +173,11 @@ check("route/explicit beats workflow",
 d = r.route({"body": "मुझसे दो बार शुल्क लिया गया"}, Q_GENERIC)
 check("decision/has repo", d["repo"], "convaiinnovations/laya/multilingual")
 check("decision/has reason", isinstance(d["reason"], str) and len(d["reason"]) > 0, True)
+# unidentified Latin-script language: routed on the non-English letters alone, not to English
+d_und = r.route({"body": "Klients tika norēķināts divreiz un pieprasa atmaksu par rēķinu"}, Q_GENERIC)
+check("route/undecided latin is multilingual", d_und["model"], "multilingual")
+check("route/undecided names no language", d_und["detection"]["language"], None)
+check("route/undecided reason mentions letters", "non-English letters" in d_und["reason"], True)
 check("decision/detection script", d["detection"]["script"], "devanagari")
 check("decision/.model property", d.model, "multilingual")
 check("decision/is dict", isinstance(d, dict), True)
