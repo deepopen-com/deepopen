@@ -60,8 +60,27 @@ _STOP = {
            "questo", "questa", "anche", "come", "più", "sono", "nella", "alla"},
     "nl": {"het", "een", "van", "is", "op", "te", "dat", "niet", "met", "voor", "zijn", "aan",
            "door", "maar", "ook", "worden", "deze", "naar", "wordt"},
+    # Romanian words that its Romance neighbours do not share, so adding `ro` cannot steal a
+    # French/Spanish/Italian/Portuguese state: `la`, `o`, `un`, `de`, `pe`, `ca` are deliberately
+    # left out for that reason, and the diacritic signal below carries the rest.
+    "ro": {"și", "să", "este", "sunt", "care", "pentru", "din", "dar", "după", "până", "fără",
+           "ale", "lui", "în", "fost", "acum", "vreau", "trebuie", "foarte", "acest", "această",
+           "acesta", "aceasta", "mi", "ți", "vă", "nu"},
 }
-_NON_EN_DIACRITICS = set("àâäãáåçéèêëíìîïñóòôöõøúùûüýÿßæœđłşţğıåäö")
+# Letters that ordinary English does not use. This is the signal that catches a Latin-script
+# language we hold no stopwords for at all (Romanian, Polish, Czech, Turkish, Baltic, ...),
+# which is the difference between routing it to the multilingual checkpoint and silently
+# handing it to the English one.
+_NON_EN_DIACRITICS = set(
+    "àâäãáåçéèêëíìîïñóòôöõøúùûüýÿßæœ"          # Western European
+    "ăâîșțşţ"                                   # Romanian
+    "ąćęłńśźż"                                  # Polish
+    "čďěňřšťůž"                                 # Czech / Slovak
+    "őű"                                        # Hungarian
+    "ğı"                                        # Turkish (text is lowercased before matching)
+    "āēģīķļņūž"                                 # Baltic
+    "đ"                                         # Serbo-Croatian / Vietnamese
+)
 _WORD = re.compile(r"[^\W\d_]+", re.UNICODE)
 
 
@@ -131,30 +150,59 @@ def script_profile(text: str) -> Dict[str, float]:
     return {k: v / total for k, v in counts.items() if v}
 
 
+# A diacritic rate above this is taken as evidence the text is not English, even when no
+# stopword list matches it.
+NON_EN_DIACRITIC_RATE = 0.02
+
+
+def latin_profile(text: str) -> Dict[str, object]:
+    """Evidence behind the Latin-script language guess.
+
+    Returns `language` (may be None when undecided), `english_hits`, `diacritic_rate` and
+    `looks_non_english`. `analyse` needs the evidence and not just the verdict, because
+    "undecided" and "English" are different answers and only one of them is safe to send to the
+    English checkpoint.
+    """
+    words = [w.lower() for w in _WORD.findall(text)]
+    lowered = text.lower()
+    diac = sum(1 for ch in lowered if ch in _NON_EN_DIACRITICS)
+    diac_rate = diac / max(1, len(lowered))
+    non_english = diac_rate >= NON_EN_DIACRITIC_RATE
+    if len(words) < 4:
+        return {"language": None, "english_hits": 0, "diacritic_rate": diac_rate,
+                "looks_non_english": non_english}
+
+    scores = {lg: sum(1 for w in words if w in sw) for lg, sw in _STOP.items()}
+    en = scores.get("en", 0)
+    best_lg, best = max(((lg, s) for lg, s in scores.items() if lg != "en"),
+                        key=lambda kv: kv[1], default=(None, 0))
+    # No stopword hit for any non-English language is no evidence for a *particular* one. Naming
+    # the winner of a 0-0 tie invented a language (Romanian text was reported as French), so stay
+    # undecided and let the diacritic rate speak.
+    if best == 0:
+        best_lg = None
+
+    lang = None
+    if best_lg and best >= max(2, en + 2):
+        # a non-English language needs a clear margin over English function words
+        lang = best_lg
+    elif best_lg and non_english and best >= max(2, en):
+        # Needs two hits here too. One shared function word ("para" in Turkish text) named Spanish
+        # on the strength of the diacritics alone, which is a guess dressed as a detection.
+        lang = best_lg
+    elif en and not non_english:
+        lang = "en"
+    return {"language": lang, "english_hits": en, "diacritic_rate": diac_rate,
+            "looks_non_english": non_english}
+
+
 def guess_latin_language(text: str) -> Optional[str]:
     """Best-effort language code for Latin-script text, or None when undecided.
 
     Scores function-word hits per language and requires the winner to beat English by a margin,
     so ordinary English is never misrouted. Short inputs usually return None on purpose.
     """
-    words = [w.lower() for w in _WORD.findall(text)]
-    if len(words) < 4:
-        return None
-    scores = {lg: sum(1 for w in words if w in sw) for lg, sw in _STOP.items()}
-    lowered = text.lower()
-    diac = sum(1 for ch in lowered if ch in _NON_EN_DIACRITICS)
-    diac_rate = diac / max(1, len(lowered))
-    en = scores.get("en", 0)
-    best_lg, best = max(((lg, s) for lg, s in scores.items() if lg != "en"),
-                        key=lambda kv: kv[1], default=(None, 0))
-    if best == 0 and diac_rate < 0.02:
-        return "en" if en else None
-    # a non-English language needs a clear margin over English function words
-    if best_lg and best >= max(2, en + 2):
-        return best_lg
-    if diac_rate >= 0.04 and best_lg and best >= en:
-        return best_lg
-    return "en" if en else None
+    return latin_profile(text)["language"]
 
 
 def analyse(state: Union[str, dict, list, None]) -> Dict[str, object]:
@@ -169,13 +217,24 @@ def analyse(state: Union[str, dict, list, None]) -> Dict[str, object]:
     non_latin = round(1.0 - prof.get("latin", 0.0), 4) if prof else 0.0
     if script == "unknown":
         return {"script": "unknown", "script_profile": prof, "language": None,
-                "is_english": True, "non_latin_fraction": 0.0}
+                "is_english": True, "language_undecided": True, "diacritic_rate": 0.0,
+                "non_latin_fraction": 0.0}
     if script != "latin":
         return {"script": script, "script_profile": prof, "language": None,
-                "is_english": False, "non_latin_fraction": non_latin}
-    lang = guess_latin_language(text)
+                "is_english": False, "language_undecided": True, "diacritic_rate": 0.0,
+                "non_latin_fraction": non_latin}
+    prof_lat = latin_profile(text)
+    lang = prof_lat["language"]
+    # Undecided is not English. Treating it as English sent every Latin-script language we hold no
+    # stopwords for to the checkpoint that cannot read it, silently. When nothing identifies the
+    # language, non-English letters are enough to prefer the multilingual checkpoint; text with no
+    # such letters (including short English) still goes to the English one.
+    undecided = lang is None
+    english = lang == "en" or (undecided and not prof_lat["looks_non_english"])
     return {"script": "latin", "script_profile": prof, "language": lang,
-            "is_english": lang in (None, "en"), "non_latin_fraction": non_latin}
+            "is_english": english, "language_undecided": undecided,
+            "diacritic_rate": round(float(prof_lat["diacritic_rate"]), 4),
+            "non_latin_fraction": non_latin}
 
 
 def is_english(state: Union[str, dict, list, None]) -> bool:

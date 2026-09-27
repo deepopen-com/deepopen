@@ -282,7 +282,13 @@ class Router:
                 det["script"], 100 * float(det["non_latin_fraction"]))
         elif not det["is_english"]:
             key = "multilingual"
-            reason = "Latin script but language looks like %r, not English" % det["language"]
+            if det["language"]:
+                reason = "Latin script but language looks like %r, not English" % det["language"]
+            else:
+                # Unidentified Latin-script language: routed on the non-English letters alone,
+                # because no stopword list here covers it.
+                reason = ("Latin script, language not identified but %.0f%% non-English letters; "
+                          "not safe for the English checkpoint" % (100 * float(det["diacritic_rate"])))
         else:
             key = "english"
             reason = "English Latin text"
