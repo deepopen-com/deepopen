@@ -14,7 +14,6 @@
 <div align="center">
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/15d4Yv__KHeHjshVb-6PRTfqVllxih2S3?usp=sharing)
-[![PyPI version](https://img.shields.io/pypi/v/deepopen.svg)](https://pypi.org/project/deepopen/)
 [![Hugging Face Model](https://img.shields.io/badge/%F0%9F%A4%97%20Model-convaiinnovations%2Fdeepopen-blue)](https://huggingface.co/convaiinnovations/deepopen)
 [![Multilingual](https://img.shields.io/badge/%F0%9F%A4%97%20Model-deepopen--multilingual-blue)](https://huggingface.co/convaiinnovations/deepopen-multilingual)
 [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-deepopen--demo-orange)](https://huggingface.co/spaces/convaiinnovations/deepopen-demo)
@@ -52,8 +51,10 @@ The reported leaderboard positions are comparisons against reference results fro
 ---
 ## Installation
 
+Install the SDK from this GitHub repository. This requires Git and a Python environment with pip; a public PyPI release under the name `deepopen` is not currently available.
+
 ```bash
-pip install deepopen
+python -m pip install "git+https://github.com/deepopen-com/deepopen.git"
 ```
 
 ---

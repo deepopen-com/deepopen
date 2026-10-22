@@ -48,9 +48,9 @@ DeepOpen 基于三大独立优化的检查点构建，内置的智能路由器�
 
 快速上手部署流程
 1. 安装依赖包
-直接通过PyPI一键安装最新版本：
+从本 GitHub 仓库安装 SDK。需要先安装 Git，并准备好带有 pip 的 Python 环境；目前 PyPI 上尚无可用的 deepopen 公开发行包：
 ```bash
-pip install deepopen
+python -m pip install "git+https://github.com/deepopen-com/deepopen.git"
 ```
 
 2. 推荐路由模式（开箱即用）
