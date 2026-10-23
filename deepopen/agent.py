@@ -354,7 +354,7 @@ def load(model_id_or_path: str = "convaiinnovations/laya", device: Optional[str]
 
     `subfolder` picks one checkpoint out of a repo that bundles several:
 
-        laya.load("convaiinnovations/laya")                           # English (repo root)
-        laya.load("convaiinnovations/laya", subfolder="multilingual")
+        deepopen.load("convaiinnovations/laya")                           # English (repo root)
+        deepopen.load("convaiinnovations/laya", subfolder="multilingual")
     """
     return Agent(model_id_or_path, device=device, token=token, subfolder=subfolder)

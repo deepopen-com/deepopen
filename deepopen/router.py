@@ -122,7 +122,7 @@ def match_typed_decisions_workflow(questions: Dict[str, Any]) -> Optional[str]:
 class Router:
     """Lazily loads Laya checkpoints and sends each request to the right one.
 
-        from laya import Router
+        from deepopen import Router
 
         r = Router()
         r.predict({"message": "Mein Konto wurde zweimal belastet"}, questions)   # -> multilingual

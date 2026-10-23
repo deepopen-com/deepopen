@@ -84,17 +84,19 @@ jobs:
         run: |
           # torch.load / pickle execute arbitrary code during deserialization. Laya loads
           # checkpoints from the Hub, so a pickle path would be remote code execution on
-          # `laya.load("someone/their-model")`.
-          if grep -rnE "\bpickle\b|torch\.load\(|joblib\.load\(|yaml\.load\(" laya/; then
+          # `deepopen.load("someone/their-model")`.
+          test -d deepopen
+          if grep -rnE "\bpickle\b|torch\.load\(|joblib\.load\(|yaml\.load\(" deepopen/; then
             echo "::error::unsafe deserialization in the shipped package - use safetensors"
             exit 1
           fi
-          echo "OK: no pickle/torch.load/yaml.load in laya/"
+          echo "OK: no pickle/torch.load/yaml.load in deepopen/"
       - name: No shell-out or dynamic exec in the shipped package
         run: |
-          if grep -rnE "os\.system\(|subprocess\.|shell=True|\beval\(|\bexec\(" laya/ \
+          test -d deepopen
+          if grep -rnE "os\.system\(|subprocess\.|shell=True|\beval\(|\bexec\(" deepopen/ \
                | grep -v "\.eval()"; then
             echo "::error::shell-out or dynamic execution in the shipped package"
             exit 1
           fi
-          echo "OK: no os.system/subprocess/eval/exec in laya/"
+          echo "OK: no os.system/subprocess/eval/exec in deepopen/"

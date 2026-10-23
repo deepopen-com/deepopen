@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.9", "3.11", "3.13"]
+        python: ["3.10", "3.11", "3.13"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -36,10 +36,10 @@ jobs:
           python -m pip install --upgrade pip
           # CPU-only torch keeps the job under a minute instead of pulling CUDA wheels
           pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install -e .
+          pip install .
 
       - name: Import check
-        run: python -c "import laya; print(laya.__version__); print(sorted(laya.__all__))"
+        run: python -I -c "import deepopen; from importlib.metadata import version; assert deepopen.__version__ == version('deepopen'); print(deepopen.__version__); print(sorted(deepopen.__all__))"
 
       - name: Routing and language-detection tests
         run: |
@@ -56,9 +56,9 @@ jobs:
           python-version: "3.11"
       - run: pip install ruff
       - name: Ruff
-        run: ruff check laya/ --select=E9,F63,F7,F82,F401,F811 --line-length=120
+        run: ruff check deepopen/ --select=E9,F63,F7,F82,F401,F811 --line-length=120
       - name: Byte-compile every module
-        run: python -m compileall -q laya/ tests/
+        run: python -m compileall -q deepopen/ tests/
 
   build:
     name: package
@@ -70,12 +70,13 @@ jobs:
           python-version: "3.11"
       - run: pip install build twine
       - run: python -m build
+      - run: python -m pip install --no-deps dist/*.whl
       - name: Validate metadata
         run: python -m twine check dist/*
       - name: Version must match the tag on a release
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          pkg=$(python -c "import re;print(re.search(r'version = \"(.*)\"', open('pyproject.toml').read()).group(1))")
+          pkg=$(python -c "from importlib.metadata import version; print(version('deepopen'))")
           tag="${GITHUB_REF_NAME#v}"
           test "$pkg" = "$tag" || { echo "pyproject $pkg != tag $tag"; exit 1; }
       - uses: actions/upload-artifact@v4

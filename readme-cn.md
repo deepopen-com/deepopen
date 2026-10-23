@@ -1,75 +1,46 @@
-# DeepOpen：开源多语言 System 1 决策引擎
+# DeepOpen
 
 [English](README.md) | **简体中文**
 
-DeepOpen 是基于laya的一款完全开源的非自回归System 1决策引擎，专为结构化类型决策场景设计。
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-lockup-dark.png" />
+    <img src="assets/logo-lockup.png" alt="DeepOpen" width="330" />
+  </picture>
+</p>
 
-## 复现 打榜  banking77
+**基于 Laya 的非自回归结构化决策 SDK。**
 
-https://github.com/deepopen-com/deepopen/tree/main/banking77
+DeepOpen 根据预先定义的问题，对文本或 JSON 返回标签、分数和概率，不生成自由文本。输出类型受约束，但判断仍可能出错，概率也需要在实际业务数据上验证。
 
+本仓库包含决策 SDK，以及 Banking77 和 CLINC150 的适配与复现实验。默认预训练权重来自上游 **Laya**，与下方成绩表中的任务专用分类模型不同。
 
-## 复现 打榜  clinc150
+## 安装
 
-https://github.com/deepopen-com/deepopen/tree/main/clinc150
+需要 **Python 3.10 或更新版本**和 Git。从本仓库安装；此安装方式不依赖名为 `deepopen` 的 PyPI 发行包。
 
-
-它摒弃了传统大模型逐Token生成文本的模式，在单次前向传递中即可完成100+种语言的多维度类型判断，单请求延迟低至33毫秒、批量处理仅7.2毫秒（T4显卡实测），依托严格正确评分规则RLCD完成强化学习训练，通过内置智能路由器自动为每个请求匹配最优检查点，彻底解决了传统大模型在分类、路由、打分场景下速度慢、成本高、易产生幻觉的痛点。
-
-
-## 打榜表现
-
-DeepOpen 在两个榜单打榜的初步结果：
-模型： Deepopen（改进后的 Laya）
-榜单： CLINC150 和 Banking77
-
-![](https://github.com/deepopen-com/deepopen/blob/main/%E6%89%93%E6%A6%9C.png?raw=true)
-
-本地测试： 对照参考成绩，分别位于第 2 位和第 5 位；
-
-
-
-
-
-## 核心架构与三大检查点
-
-DeepOpen 基于三大独立优化的检查点构建，内置的智能路由器可在亚毫秒内完成输入内容的脚本、语言识别，自动调度对应最优模型，无需开发者手动配置切换规则：
-- DeepOpen 英文检查点：基于ModernBERT-large 421M参数训练，支持512上下文窗口，在英文单语种任务中实现39.5毫秒单请求延迟，在英文意图分类、XNLI等基准测试中准确率达到0.783-0.860，专为纯英文高并发决策场景优化。
-- DeepOpen-multilingual 多语言检查点：基于mmBERT-base 322M参数训练，支持1024上下文窗口，推理速度比英文模型快2倍，覆盖100+种语言，其中45种语言的准确率超过3倍随机基线，在非拉丁语种下性能远超纯英文模型，13种非英文语言的意图分类准确率达到0.451，是英文检查点的1.47倍。
-- DeepOpen-typed-decisions 类型决策检查点：基于ModernBERT-large 421M参数训练，支持1024上下文窗口，专门针对结构化类型决策场景微调，在2000个决策样本的基准测试中，准确率达到0.766，超过TypeSafe Jev 1.13.0的0.727，同时Brier分数低至0.062，是目前开源决策模型中精度领先的方案。
-
-## 核心技术特性
-
-1. 零幻觉非自回归设计：全程不生成任何文本内容，所有输出均为开发者预先定义的结构化类型结果，无需后续解析处理，从根源上杜绝了传统大模型的幻觉问题，输出结果100%符合预设的类型边界。
-2. 全链路智能路由机制：在模型前向推理前，通过纯Python实现的语言检测模块，在<0.5毫秒内识别输入内容的脚本类型和所属语言，自动匹配最优检查点，彻底避免了英文模型在非拉丁语种下“高置信度错误”的致命问题——此前纯英文检查点在高棉语任务中准确率为0，却给出95.2%的错误置信度，仅靠置信度阈值完全无法规避风险。
-3. 严格校准的概率输出：依托RLCD强化学习框架训练，所有输出的置信度分数具备严格的统计意义，经过域温度校准后，ECE（预期校准误差）低至0.081，远优于同类方案，可直接用于生产环境的自动置信门控流程，高置信度请求直接自动处理，低置信度请求自动流转人工审核。
-4. 极致的性能表现：在特斯拉T4显卡上实测，单请求推理仅需32.8毫秒，10题批量处理仅72.3毫秒，单T4显卡最高支持每秒103-332个问题的吞吐量，实测速度是TypeSafe Jev的7.8倍。
-5. 完全开源零成本部署：采用Apache 2.0开源许可，所有权重完全开放，支持本地自托管，无需调用任何付费API，不存在按Token计费的额外成本，对比TypeSafe Jev每百万Token 0.042美元的定价，长期大规模部署可节省近100%的推理成本。
-
-快速上手部署流程
-1. 安装依赖包
-从本 GitHub 仓库安装 SDK。需要先安装 Git，并准备好带有 pip 的 Python 环境；目前 PyPI 上尚无可用的 deepopen 公开发行包：
 ```bash
+python -m pip install "git+https://github.com/deepopen-com/deepopen.git"
+python -c "import deepopen; print(deepopen.__version__)"
+```
+
+仅使用 CPU 时，先安装 CPU 版 PyTorch，再安装 SDK：
+
+```bash
+python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
 python -m pip install "git+https://github.com/deepopen-com/deepopen.git"
 ```
 
-2. 推荐路由模式（开箱即用）
-通过内置Router入口点，自动完成语言检测和模型调度，预加载所有检查点后即可实现亚毫秒级路由切换：
+使用 GPU 时，请安装与驱动和 CUDA 环境兼容的 PyTorch。打榜训练脚本有独立的依赖和运行说明，请查阅对应目录。
+
+## 快速上手
+
+以下示例加载上游英文检查点，完成一个分类问题。首次运行会下载权重并初始化模型，耗时不能当作预热后的推理延迟。
+
 ```python
 import deepopen
-from deepopen import Router
 
-# 将所有检查点预加载到内存，实现35毫秒以内的极速推理
-router = Router(preload=True, device="cuda")
-
-# 定义任意语言的输入状态
-state = {
-    "from": "user@acme.com",
-    "subject": "Duplicate charge on invoice 4411",
-    "body": "Hi, we were billed twice for March. Please refund the duplicate today or we will cancel our plan."
-}
-
-# 定义自定义类型决策规则
+agent = deepopen.load("convaiinnovations/laya", device="cpu")
 questions = {
     "department": {
         "type": "choice",
@@ -78,76 +49,107 @@ questions = {
             "billing": "invoices, payments, refunds",
             "technical": "bugs, outages, system errors",
             "sales": "pricing, new contracts",
-            "other": "everything else"
-        }
-    },
-    "urgency": {
-        "type": "score",
-        "instructions": "How urgent is this request?",
-        "criteria": ["not urgent", "soon", "critical deadline or blocking issue"]
-    },
-    "churn_risk": {
-        "type": "noul",
-        "instructions": "Does the user threaten to cancel or leave?"
-    },
-    "refund_requested": {
-        "type": "noul",
-        "instructions": "Does the user explicitly request a refund?"
+            "other": "everything else",
+        },
     }
 }
-
-# 自动路由到最优模型完成推理
-res_en = router.predict(state, questions)
-print("Department :", res_en["answers"]["department"]["choice"])  # 输出: billing (confidence: 0.94)
-print("Routing    :", res_en["routing"]["model"])                 # 输出: english
+result = agent.predict(
+    {"body": "I was charged twice. Please refund the duplicate payment."},
+    questions,
+)
+print(result["answers"]["department"])
 ```
 
-3. 生产环境部署优化
-根据业务场景灵活调整内存策略，避免不必要的显存占用：
+结果包含 `choice`、`probabilities` 和 `confidence`。实际输出取决于检查点和输入，高置信度不代表一定正确。GPU 环境可改为 `device="cuda"`；也可以用本地检查点目录替换 Hub 模型 ID。
+
+## 路由与模型加载
+
 ```python
-# 仅预加载业务所需的检查点，节省显存
-router.preload(["english", "multilingual"])
+from deepopen import Router
 
-# 配置LRU缓存策略，最多同时保留2个热模型
-router = Router(max_loaded=2)
+router = Router(device="cpu")
+# 只查看路由决定，不下载权重、不执行推理。
+print(router.route({"body": "Please refund the duplicate charge."}, questions))
 
-# 手动卸载模型释放内存
-router.unload()
+# 第一次预测时加载选中的检查点。
+result = router.predict({"body": "Please refund the duplicate charge."}, questions)
+
+# 适合对应工作流时，可显式指定任务微调检查点。
+# result = router.predict(state, questions, model="typed-decisions")
 ```
 
-内置生产级工作流程预设
-DeepOpen 提供了预先调优的开箱即用问题模板，无需从零构建规则即可快速落地核心业务场景：
-- 智能模型路由：自动判断用户请求的复杂度，将简单任务路由到小模型、复杂任务路由到前沿大模型，大幅降低整体推理成本。
-- 实时Prompt防护：精准识别Prompt注入、越狱指令、敏感信息泄露等风险，为大模型应用构建前置安全屏障。
-- 内容安全审核：快速检测文本中的毒性内容、骚扰信息、威胁言论，适配多语言社区的内容治理需求。
-- 支持工单分诊：自动完成工单意图识别、紧急度打分、用户挫败感评估、流失风险预判，大幅提升客服流转效率。
+语言路由基于文字系统和语言启发式规则，不保证选中准确率最高的模型。默认**不会自动选用 typed-decisions 检查点**；请显式指定，或在业务验证后设置 `auto_task_detection=True` 开启任务检测。
 
-基准测试与行业对比
-基于17416道题的共享基准数据集，DeepOpen与主流决策引擎的实测对比如下：
-| 测试维度 | DeepOpen（路由模式） | TypeSafe Jev 1.13.0 |
-| --- | --- | --- |
-| 类型决策准确率（2000样本） | 0.766 | 0.727 |
-| 预期校准误差ECE | 0.081 | 0.144 |
-| P50单请求延迟 | 32.8毫秒 | 236-276毫秒 |
-| 支持可用语言数 | 51种中45种 | 无公开多语言基准 |
-| 部署模式 | 完全自托管开源 | 仅封闭API |
-| 推理成本 | 0（本地部署） | 0.042美元/百万Token |
+默认缓存只保留一个模型。频繁处理多语言请求时，可使用 `Router(max_loaded=2)`，再调用 `router.preload(["english", "multilingual"])`。`Router(preload=True)` 会加载全部三个模型，需要相应内存。预加载能减少重复加载，但不保证固定推理延迟。
 
-在高基数标签场景下，TypeSafe Jev在50+选项的任务中表现更优，而DeepOpen可通过调整`head_max_len`参数扩展选项支持能力，将选项提示预算提升至512，即可支持70+选项的精准分类，满足绝大多数业务场景需求。
+| 路由键 | 默认 Hub 位置 | 编码器 | 默认上下文 |
+|---|---|---|---:|
+| `english` | [Laya 仓库根目录](https://huggingface.co/convaiinnovations/laya) | ModernBERT-large | 512 |
+| `multilingual` | [Laya / multilingual](https://huggingface.co/convaiinnovations/laya/tree/main/multilingual) | mmBERT-base | 1,024 |
+| `typed-decisions` | [Laya / typed-decisions](https://huggingface.co/convaiinnovations/laya/tree/main/typed-decisions) | ModernBERT-large | 1,024 |
 
-开源资源与生态
-DeepOpen 全链路资源完全开放，开发者可快速获取所有资料：
-- Hugging Face 模型仓库：`convaiinnovations/deepopen`
-- 在线互动演示：`convaiinnovations/deepopen-demo`
-- 完整技术工程报告：Dev.to 专栏
-- 微调教程Notebook：支持在Kaggle免费2xT4显卡上完成全流程微调，4-5小时即可完成3万道题的训练，通过RLCD强化学习将基础模型准确率从0.36提升至0.766，完全适配垂直领域的定制化决策需求。
+Python 包名为 `deepopen`；上游模型 ID 保留 `laya`，与加载器配置一致。
 
----
+## 决策类型与工作流模板
 
-## 参考
+| 类型 | 输出 | 示例 |
+|---|---|---|
+| `choice` | 标签、各选项概率、置信度 | 部门或意图分类 |
+| `score` | 有序等级的期望值和分布 | 紧急度评分 |
+| `noul` | 陈述为真的估计概率 | 是否请求退款 |
 
-<br>参考资料<br>[1] [DeepL + OpenAI integrations - connect and automate | Bardeen.ai - www.bardeen.ai](https://www.bardeen.ai/integrations/openai/deepl)<br>[2] [Minutes.ai - Smart Government Innovation LAB - www.smartlab.gov.hk](https://www.smartlab.gov.hk/en/ai_solutions/a-0063)<br>[3] [benchmark.ng — Nigeria's AI Decision Engine - benchmark.ng](https://benchmark.ng/)<br>[4] [Phrase: AI-Powered Localization & Translation Platform - Phrase官网](https://phrase.com/?utm_medium=yelp_blog&utm_source=logiciels.pro&utm_campaign=5-ways-yelp-can-help&utm_content=blog_text_link&utm_term=meet-yelp-host)<br>[5] [DeepSeek Open Web UI 安装部署全攻略：从环境配置到可视化交互 - 百度智能云](https://cloud.baidu.com/article/3564171)<br>[6] [Jev 是什么：前 OpenAI 研究员做的“不说话“模型，只输出带概率的结构化决策-CSDN博客 - CSDN博客](https://blog.csdn.net/aidoudoulong/article/details/166136816)<br>[7] [前OpenAI研究员推Jev模型，绕开文本生成直出决策 - m.counselleap.cn](http://m.counselleap.cn/qqznews/202609/article_2962603.shtml)<br>[8] [MCP服务器 - 开放式深度研究模型协议-MCP服务 - www.mcpworld.com](https://www.mcpworld.com/zh/detail/8ed885da2b0dac2c97d11afb4a219269)<br>[9] [SGLang开源引擎：开源创新与推理革命的融合之路 - 百度智能云](https://cloud.baidu.com/article/4935192)<br>[10] [GitHub - weibaohui/openDeepWiki: 完全AI驱动的 DeepWiki ,使用 Go + Eino 技术栈开发 · GitHub - GitHub](https://github.com/weibaohui/openDeepWiki)<br>[11] [正面硬刚 OpenAI o1！DeepSeek-R1：开启 AI 自主推理新时代，现已开源！ - 知乎 - 知乎](https://zhuanlan.zhihu.com/p/1960455097218761196)<br>[12] [详解多智能体架构：以 Open Deep Research 项目为例 - 知乎 - 知乎](https://zhuanlan.zhihu.com/p/1944449334209942670)<br>[13] [集成DeepSeek的开源利器：3款高效应用深度解析 - 百度智能云](https://cloud.baidu.com/article/5076327)<br>[14] [当开源创新遇上推理革命：SGLang如何炼就DeepSeek最强开源推理引擎？_腾讯新闻 - 腾讯网](https://new.qq.com/rain/a/20250306A09PRF00)<br>[15] [3款集成DeepSeek的开源应用推荐：开发者高效工具指南 - 百度智能云](https://cloud.baidu.com/article/4511140)<br>[16] [当开源创新遇上推理革命：SGLang如何炼就DeepSeek最强开源推理引擎？-腾讯云开发者社区-腾讯云 - 腾讯云](https://cloud.tencent.com/developer/article/2502983)<br>[17] [DeepSeek-V3.2：开源大语言模型的新里程碑，在推理与智能体任务中突破性能边界 - 知乎 - 知乎](https://zhuanlan.zhihu.com/p/1978976195946239755)<br>[18] [Open Deep Research V2：新架构！上下文工程最新实践 - 知乎 - 知乎](https://zhuanlan.zhihu.com/p/1933207553409525463)<br>[19] [深度探索DeepSeek：解锁高效开发与智能决策的新范式 - 百度智能云](https://cloud.baidu.com/article/3732497)<br>[20] [【AI大模型】 Langchain+DeepSeek R1从入门到精通，收藏这一篇就够了！！_langchain从入门到实战-CSDN博客 - CSDN博客](https://blog.csdn.net/2401_85327249/article/details/147629035)<br>[21] [开源×推理”双引擎驱动：SGLang打造DeepSeek开源推理新标杆 - 百度智能云](https://cloud.baidu.com/article/3728141)<br><br>
+SDK 提供 `router_questions()`、`guard_questions()`、`moderation_questions()`、`triage_questions()` 和 `email_questions()`。这些是问题模板，不是生产安全保证。用于重要自动决策前，应验证准确率并校准置信度。
+
+## 意图分类实验
+
+以下为公开测试集上的历史本地评测，不代表已经获得官方榜单排名。模型经过任务专用训练，安装 SDK 不会自动得到这些成绩。
+
+| 数据集 | 配置 | 测试准确率 | 评测范围 |
+|---|---|---:|---|
+| Banking77 | Laya 编码器 + 分类头，训练 7 轮后继续训练 4 轮 | **94.0909%** | 3,080 条测试样本，77 类 |
+| CLINC150 | 验证集选出的 R-Drop 单模型 | **97.7556%** | 4,500 条范围内测试样本，150 类 |
+| CLINC150 | Laya + 三个 DeBERTa-v3-large | **98.0222%** | 四模型集成；相同范围内测试集 |
+
+CLINC150 成绩不包含范围外意图检测（OOS）。Banking77 的主成绩来自普通分类头继续训练，不能归因于原型分支。集成系统有四个编码器，不能用下面单检查点的延迟代表其推理成本。
+
+- [Banking77 复现指南](banking77/README.md)：训练、评测、来源及替代实验分支。
+- [CLINC150 复现指南](clinc150/README.md)：单模型与集成协议、随机种子和评测范围。
+
+## 上游检查点评测与限制
+
+[基准报告](BENCHMARKS.md)记录了不同检查点的独立实验。不要将下列各行拼成同一个配置的综合性能。
+
+| 指标 | 配置与条件 | 历史结果 |
+|---|---|---:|
+| 单问题延迟 | 多语言检查点，预热后推理，NVIDIA T4 | 32.8 毫秒 |
+| 十问题延迟 | 多语言检查点，单次批处理，NVIDIA T4 | 总计 72.3 毫秒；每问题 7.2 毫秒 |
+| Typed-decisions 准确率 | 任务微调检查点；400 个案例、2,000 个决策 | 0.766 |
+| 重新拟合温度后的平均 ECE | 英文基础检查点，校准实验 | 0.081 |
+| 多语言覆盖评测 | MASSIVE 的 51 种语言，20 个选项 | 45 / 51 超过随机准确率的 3 倍 |
+
+编码器声称覆盖 100 多种语言，不代表所有语言具有同等质量。基础检查点在 typed-decisions 零样本任务上接近随机水平，低于多数类基线。两个基础检查点出厂时均存在过度自信，温度拟合必须使用独立校准集。报告中的留出内容审核实验准确率仅为 0.530。大量选项会争用提示词预算，有序等级评分也是当前弱项。
+
+历史报告中的 Jev 数据来自第三方公开结果，提示词和样本量不同，只能作为参考，不能视为严格同条件对比。本地部署免除按 Token 支付的 API 费用，但仍有硬件、电力和运维成本。
+
+## 资源与来源说明
+
+- [完整基准报告](BENCHMARKS.md)与[研究脚本](research/README.md)。
+- [T4 基准测试 Notebook](research/scripts/laya_benchmark_colab.ipynb)。
+- [Typed-decisions 微调 Notebook](notebooks/laya_finetune_typed_decisions_2xT4_kaggle.ipynb)。
+- [上游 Laya 源码](https://github.com/NandhaKishorM/laya)与[预训练权重](https://huggingface.co/convaiinnovations/laya)。
+
+SDK 和基础模型架构源自 Laya。本仓库提供 DeepOpen 包装和文档、Banking77 适配实验，以及 CLINC150 的 R-Drop/SupCon 和异构集成复现流程。固定版本的源码来源见 [Banking77 来源清单](banking77/SOURCE_MANIFEST.json)与 [CLINC150 来源清单](clinc150/SOURCE_MANIFEST.json)。SDK 默认继续加载上游检查点；任务专用模型的训练与导出请参阅实验指南。
+
+## 开发与检查
+
+```bash
+python -m pip install -e .
+python tests/test_router.py
+python tests/test_criteria.py
+```
+
+上述测试检查路由和输入处理，不下载模型权重。`tests/test_local_e2e.py` 还需要本地检查点，文件开头说明了目录布局。CI 同时检查代码、构建安装包并检查已安装的 wheel。SDK 版本号统一定义在 `deepopen/_version.py`。
 
 ## 许可证
 
-本项目采用 [Apache 2.0](LICENSE) 许可证。
+[Apache License 2.0](LICENSE)。请保留上游署名，并根据使用场景查阅模型与数据集各自的许可证。

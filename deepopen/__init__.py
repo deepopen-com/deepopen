@@ -22,7 +22,7 @@ from .presets import (
 )
 from .router import DEFAULT_MODELS, RouteDecision, Router
 
-__version__ = "0.3.4"
+from ._version import __version__
 __all__ = [
     "Agent",
     "RLAgent",

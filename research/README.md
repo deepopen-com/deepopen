@@ -1,7 +1,7 @@
 # Research
 
 Benchmark harnesses and raw results for the Laya checkpoints. This branch is the evidence behind
-the numbers quoted in the main README — nothing here is imported by the `laya` package.
+the historical checkpoint measurements quoted in the main README — nothing here is imported by the `deepopen` package. These archived harnesses and notebooks retain upstream `laya` imports and their original environment instructions; they are separate from the current SDK installation and CI checks.
 
 ## Scripts
 

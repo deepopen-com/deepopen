@@ -1,4 +1,6 @@
-# Laya benchmarks
+# Laya checkpoint benchmarks
+
+This is a historical checkpoint report. It is separate from the task-specific Banking77 and CLINC150 training results linked in the [project README](README.md). Accuracy, calibration, and latency rows may refer to different checkpoints and experiments; they must not be read as simultaneous properties of one deployed model. The application-run raw JSON named below is not included in this repository, so those application results cannot be independently audited from the checked-in files alone.
 
 Every checkpoint answered **byte-identical questions** in each run (fixed seed). Jev figures are **third-party published, never measured here** — no TypeSafe API access — so sample sizes and prompts differ; treat them as indicative.
 
@@ -6,7 +8,7 @@ Every checkpoint answered **byte-identical questions** in each run (fixed seed).
 |---|---|---|
 | T4 Colab | typed-decisions, MASSIVE (14 langs), XNLI (15 langs), English suites, latency, option-order robustness, calibration repair | `research/results/t4_colab_benchmark.json` |
 | CPU sweep | MASSIVE intent across **all 51 languages**, typed-decisions on all three checkpoints | `research/results/cpu_51_language_sweep.json` |
-| Applications | the six workflow themes + the datasets where Jev numbers exist, all three checkpoints | `research/results/app_benchmark.json` |
+| Applications | the six workflow themes + the datasets where Jev numbers exist, all three checkpoints | `research/results/app_benchmark.json` (not included) |
 
 ---
 

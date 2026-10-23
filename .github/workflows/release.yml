@@ -4,7 +4,7 @@ name: Release
 # publishes to PyPI and opens a GitHub Release.
 #
 # Set up once: PyPI -> Publishing -> add a Trusted Publisher for
-#   owner NandhaKishorM, repo laya, workflow release.yml, environment pypi
+#   owner deepopen-com, repo deepopen, workflow release.yml, environment pypi
 # Then no API token ever lives in GitHub secrets.
 
 on:
@@ -46,7 +46,7 @@ jobs:
       - name: Version matches the tag
         if: startsWith(github.ref, 'refs/tags/v')   # workflow_dispatch has no tag to match
         run: |
-          pkg=$(python -c "import re;print(re.search(r'version = \"(.*)\"', open('pyproject.toml').read()).group(1))")
+          pkg=$(python -c "from importlib.metadata import version; print(version('deepopen'))")
           tag="${GITHUB_REF_NAME#v}"
           echo "pyproject=$pkg tag=$tag"
           test "$pkg" = "$tag" || { echo "::error::pyproject version $pkg does not match tag $tag"; exit 1; }
@@ -70,8 +70,8 @@ jobs:
         with:
           name: dist
           path: dist/
-      # Needs a Trusted Publisher on PyPI (Publishing -> add: owner NandhaKishorM,
-      # repo laya, workflow release.yml, environment pypi). Until that exists the
+      # Needs a Trusted Publisher on PyPI (Publishing -> add: owner deepopen-com,
+      # repo deepopen, workflow release.yml, environment pypi). Until that exists the
       # exchange fails; skip-existing also makes a re-run safe after a manual upload.
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:

@@ -4,8 +4,8 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from laya.lang import analyse, detect_script, guess_latin_language, is_english, state_text  # noqa: E402
-from laya.router import (  # noqa: E402
+from deepopen.lang import analyse, detect_script, guess_latin_language, is_english, state_text  # noqa: E402
+from deepopen.router import (  # noqa: E402
     BUNDLE_REPO,
     DEFAULT_MODELS,
     STANDALONE_MODELS,

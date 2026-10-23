@@ -10,7 +10,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from laya.common import render_criterion, render_options  # noqa: E402
+from deepopen.common import render_criterion, render_options  # noqa: E402
 
 PASS, FAIL = [], []
 
@@ -102,10 +102,10 @@ check("emitted json round-trips", parsed, {"a": 1})
 
 # --------------------------------------------------------------- CPU-fallback warning (#9 follow-up)
 # The warning must fire only when a fallback actually happened -- not merely because the machine
-# has CUDA. `laya.load(path, device="cpu")` on a GPU box is a deliberate choice, not a problem.
+# has CUDA. `deepopen.load(path, device="cpu")` on a GPU box is a deliberate choice, not a problem.
 import inspect  # noqa: E402
 
-from laya import agent as _agent  # noqa: E402
+from deepopen import agent as _agent  # noqa: E402
 
 _src = inspect.getsource(_agent.Agent.__init__)
 check_true("fallback/flag is initialised", "fell_back_from = fell_back_why = None" in _src)
