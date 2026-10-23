@@ -24,28 +24,15 @@ DeepOpen combines a decision SDK, dataset-specific training strategies, and repr
 
 [Explore both benchmark comparisons, predictions, and evaluation evidence on Hugging Face](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison).
 
-### BANKING77 comparison
+### BANKING77
 
-| Method | Test accuracy | Result source |
-|---|---:|---|
-| SPACE | 94.94% | Selected published reference |
-| SPACE 2.0 | 94.77% | Selected published reference |
-| Llama 2 7B (FT) | 94.35% | Selected published reference |
-| ConvFiT | 94.16% | Selected published reference |
-| **DeepOpen (SAM, best observed)** | **94.1234%** | Author-reported; saved predictions |
-| PPTOD | 93.86% | Selected published reference |
+[![BANKING77 benchmark comparison: DeepOpen SAM 94.1234%, alongside selected published reference results](assets/banking77-hf-comparison.png)](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison)
 
-### CLINC150 comparison
+### CLINC150
 
-| Method | Test accuracy | Result source |
-|---|---:|---|
-| TOATOD-small | 98.45% | Selected published reference |
-| **DeepOpen (ensemble)** | **98.0222%** | Author-reported; saved predictions |
-| TOATOD-base | 98.01% | Selected published reference |
-| SPACE | 97.89% | Selected published reference |
-| SPACE 2.0 | 97.80% | Selected published reference |
+[![CLINC150 benchmark comparison: DeepOpen ensemble 98.0222%, alongside selected published reference results](assets/clinc150-hf-comparison.png)](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison)
 
-These tables reproduce the selected references in the [HF evaluation page](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison) (reference snapshot: 7 October 2026); they do not assign an official leaderboard rank. BANKING77 displays the best test result of three SAM seeds, selected after evaluation; the three-seed mean is **94.0368%**, with no statistically established improvement over the replayed baseline. CLINC150 covers **150 in-scope intents only**, without OOS detection, and combines one Laya-based specialist with three DeBERTa-v3-large models. Full protocol, execution caveats, and prediction files are available on the linked page.
+These screenshots show the selected references in the [HF evaluation page](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison) (reference snapshot: 7 October 2026); they do not assign an official leaderboard rank. BANKING77 displays the best test result of three SAM seeds, selected after evaluation; the three-seed mean is **94.0368%**, with no statistically established improvement over the replayed baseline. CLINC150 covers **150 in-scope intents only**, without OOS detection, and combines one Laya-based specialist with three DeBERTa-v3-large models. Full protocol, execution caveats, and prediction files are available on the linked page.
 
 ## Installation
 

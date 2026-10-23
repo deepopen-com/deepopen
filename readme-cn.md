@@ -24,28 +24,15 @@ DeepOpen 整合决策 SDK、数据集专用训练策略，以及 Banking77 和 C
 
 [在 Hugging Face 查看两份榜单对比、逐条预测及评测证据](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison)。
 
-### BANKING77 对比
+### BANKING77
 
-| 方法 | 测试准确率 | 结果来源 |
-|---|---:|---|
-| SPACE | 94.94% | 选取的公开参考成绩 |
-| SPACE 2.0 | 94.77% | 选取的公开参考成绩 |
-| Llama 2 7B (FT) | 94.35% | 选取的公开参考成绩 |
-| ConvFiT | 94.16% | 选取的公开参考成绩 |
-| **DeepOpen（SAM，观察到的最高成绩）** | **94.1234%** | 作者评测，提供保存的预测 |
-| PPTOD | 93.86% | 选取的公开参考成绩 |
+[![BANKING77 榜单对比：DeepOpen SAM 94.1234%，与选取的公开参考成绩比较](assets/banking77-hf-comparison.png)](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison)
 
-### CLINC150 对比
+### CLINC150
 
-| 方法 | 测试准确率 | 结果来源 |
-|---|---:|---|
-| TOATOD-small | 98.45% | 选取的公开参考成绩 |
-| **DeepOpen（集成）** | **98.0222%** | 作者评测，提供保存的预测 |
-| TOATOD-base | 98.01% | 选取的公开参考成绩 |
-| SPACE | 97.89% | 选取的公开参考成绩 |
-| SPACE 2.0 | 97.80% | 选取的公开参考成绩 |
+[![CLINC150 榜单对比：DeepOpen 集成 98.0222%，与选取的公开参考成绩比较](assets/clinc150-hf-comparison.png)](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison)
 
-以上复列 [HF 评测页](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison)选取的参考成绩（参考快照：2026 年 10 月 7 日），不代表官方榜单排名。BANKING77 展示的是三个 SAM 种子在测试后选出的最高成绩；三种子均值为 **94.0368%**，相对重放基线尚未证实有统计显著提升。CLINC150 仅评测 **150 类范围内意图**，不含 OOS 检测，使用一个基于 Laya 的专用模型与三个 DeBERTa-v3-large 集成。完整协议、执行差异说明和预测文件见链接页面。
+以上截图展示了 [HF 评测页](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison)选取的参考成绩（参考快照：2026 年 10 月 7 日），不代表官方榜单排名。BANKING77 展示的是三个 SAM 种子在测试后选出的最高成绩；三种子均值为 **94.0368%**，相对重放基线尚未证实有统计显著提升。CLINC150 仅评测 **150 类范围内意图**，不含 OOS 检测，使用一个基于 Laya 的专用模型与三个 DeBERTa-v3-large 集成。完整协议、执行差异说明和预测文件见链接页面。
 
 ## 安装
 
