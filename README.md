@@ -9,11 +9,43 @@
   </picture>
 </p>
 
-**A non-autoregressive SDK for structured decisions, built on Laya.**
+**An intent-classification framework and non-autoregressive SDK for structured decisions.**
 
 DeepOpen evaluates predefined questions over text or JSON and returns labels, scores, and probabilities. It does not generate free-form text. Output types are constrained; predictions can still be wrong, and probabilities require validation on your own data.
 
-This repository combines the decision SDK with reproducible Banking77 and CLINC150 adaptation experiments. The default pretrained checkpoints are upstream **Laya** models, not the task-specific classifiers reported below.
+DeepOpen combines a decision SDK, dataset-specific training strategies, and reproducible Banking77 and CLINC150 evaluations. See [Resources and attribution](#resources-and-attribution) for the upstream foundations and this repository's contributions.
+
+## Benchmark highlights
+
+| Dataset | DeepOpen test accuracy | Configuration | Correct / total |
+|---|---:|---|---:|
+| **BANKING77** | **94.1234%** | Single classifier, SAM seed 13 | 2,899 / 3,080 |
+| **CLINC150** | **98.0222%** | Four-encoder ensemble | 4,411 / 4,500 |
+
+[Explore both benchmark comparisons, predictions, and evaluation evidence on Hugging Face](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison).
+
+### BANKING77 comparison
+
+| Method | Test accuracy | Result source |
+|---|---:|---|
+| SPACE | 94.94% | Selected published reference |
+| SPACE 2.0 | 94.77% | Selected published reference |
+| Llama 2 7B (FT) | 94.35% | Selected published reference |
+| ConvFiT | 94.16% | Selected published reference |
+| **DeepOpen (SAM, best observed)** | **94.1234%** | Author-reported; saved predictions |
+| PPTOD | 93.86% | Selected published reference |
+
+### CLINC150 comparison
+
+| Method | Test accuracy | Result source |
+|---|---:|---|
+| TOATOD-small | 98.45% | Selected published reference |
+| **DeepOpen (ensemble)** | **98.0222%** | Author-reported; saved predictions |
+| TOATOD-base | 98.01% | Selected published reference |
+| SPACE | 97.89% | Selected published reference |
+| SPACE 2.0 | 97.80% | Selected published reference |
+
+These tables reproduce the selected references in the [HF evaluation page](https://c41-laya-evaluation.static.hf.space/index.html?version=ensemble-2#comparison) (reference snapshot: 7 October 2026); they do not assign an official leaderboard rank. BANKING77 displays the best test result of three SAM seeds, selected after evaluation; the three-seed mean is **94.0368%**, with no statistically established improvement over the replayed baseline. CLINC150 covers **150 in-scope intents only**, without OOS detection, and combines one Laya-based specialist with three DeBERTa-v3-large models. Full protocol, execution caveats, and prediction files are available on the linked page.
 
 ## Installation
 
@@ -100,9 +132,9 @@ The Python package is named `deepopen`; upstream model IDs retain `laya` so they
 
 The SDK provides `router_questions()`, `guard_questions()`, `moderation_questions()`, `triage_questions()`, and `email_questions()`. These are question templates, not production safety guarantees. Validate accuracy and calibrate confidence before automating consequential decisions.
 
-## Intent-classification experiments
+## Earlier intent-classification experiments
 
-These are historical local evaluations on public test sets, not confirmed official leaderboard placements. They require task-specific training; installing the SDK does not reproduce these scores automatically.
+The table below preserves earlier local evaluations and training recipes. The HF highlights above additionally include the later BANKING77 SAM continuation result (94.1234%); the older 94.0909% result is a different training and execution configuration. These are not confirmed official leaderboard placements. They require task-specific training; installing the SDK does not reproduce these scores automatically.
 
 | Dataset | Configuration | Test accuracy | Scope |
 |---|---|---:|---|
