@@ -169,6 +169,10 @@ python tests/test_criteria.py
 
 上述测试检查路由和输入处理，不下载模型权重。`tests/test_local_e2e.py` 还需要本地检查点，文件开头说明了目录布局。CI 同时检查代码、构建安装包并检查已安装的 wheel。SDK 版本号统一定义在 `deepopen/_version.py`。
 
+## 贡献者
+
+- [@songc42](https://github.com/songc42)：项目文档、基准成绩展示与仓库改进。
+
 ## 许可证
 
 [Apache License 2.0](LICENSE)。请保留上游署名，并根据使用场景查阅模型与数据集各自的许可证。

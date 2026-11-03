@@ -169,6 +169,10 @@ python tests/test_criteria.py
 
 These tests cover routing and input handling without downloading model weights. `tests/test_local_e2e.py` additionally requires local checkpoints; its module documentation describes the directory layout. CI also checks lint, package builds, and the installed wheel. The SDK version is defined once in `deepopen/_version.py`.
 
+## Contributors
+
+- [@songc42](https://github.com/songc42) — project documentation, benchmark presentation, and repository improvements.
+
 ## License
 
 [Apache License 2.0](LICENSE). Retain upstream attribution and review the separate model and dataset licenses for your intended use.
